@@ -20,11 +20,11 @@ if (isset($_GET['hapus'])) { # Buat hapus transaksi (hanya admmin)
     exit;
 }
 
-$base_sql = "SELECT t.*, k.nama_kategori, k.jenis, d.nama_dompet, d.tipe_akun, u.nama_lengkap 
+$base_sql = "SELECT t.*, k.nama_kategori, k.jenis, d.nama_dompet, d.tipe_akun, u.nama_lengkap # Buat query untuk mengambil data (Disebutkan Variablenya Soalnya kita nggak bis menampilakn angka mmentah dari kolom-kolom di database)
              FROM transaksi t
-             INNER JOIN kategori k ON t.id_kategori = k.id_kategori 
-             INNER JOIN dompet d ON t.id_dompet = d.id_dompet 
-             INNER JOIN users u ON t.id_user = u.id_user"; 
+             INNER JOIN kategori k ON t.id_kategori = k.id_kategori # Buat menghubungkan tabel transaksi dengan kategori menggunakan ID nya
+             INNER JOIN dompet d ON t.id_dompet = d.id_dompet # Buat Menghubungkan tabel transaksi dengan dompey menggunakan ID nya
+             INNER JOIN users u ON t.id_user = u.id_user"; # Buat menghubungkan tabel transaksi dengan user supaya bisa menampilkan nama anggota keluarga yg buat catatan tsb
 
 if ($role == 'admin') { # Jika user adalah admin, maka ambil semua transaksi tanpa batas
     $riwayat = $pdo->query("$base_sql ORDER BY t.tanggal DESC, t.id_transaksi DESC")->fetchAll(PDO::FETCH_ASSOC);
