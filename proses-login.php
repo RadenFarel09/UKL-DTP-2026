@@ -3,7 +3,7 @@ session_start(); # Buat session untuk menyimpan data login
 require 'koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') { # Jika form login dikirimkan, maka lakukan proses login
-    $username = trim($_POST['username']);
+    $username = trim($_POST['username']); 
     $password = $_POST['password'];
 
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?"); # Standar PDO untuk mencegah SQL Injection dan mengambil data user berdasarkan username
@@ -21,5 +21,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { # Jika form login dikirimkan, maka l
         exit;
     }
 }
-header("Location: login.php"); # Buat redirect ke login.php jika ada yang mencoba mengakses proses-login.php secara langsung dari URL
+header("Location: login.php");
 exit;

@@ -12,8 +12,8 @@ $nama = $_SESSION['nama_lengkap'];
 $role = $_SESSION['role'];
 
 if (isset($_GET['hapus'])) { # Buat hapus transaksi (hanya admmin)
-    $id = $_GET['hapus']; # Buat ambil id_transaksi dari parameter hapus di URL
-    $sql_del = ($role == 'admin') ? "DELETE FROM transaksi WHERE id_transaksi = ?" : "DELETE FROM transaksi WHERE id_transaksi = ? AND id_user = ?"; # Logika untuk membedakan hak akses admin dan user biasa dalam menghapus transaksi
+    $id = $_GET['hapus']; 
+    $sql_del = ($role == 'admin') ? "DELETE FROM transaksi WHERE id_transaksi = ?" : "DELETE FROM transaksi WHERE id_transaksi = ? AND id_user = ?";
     $params  = ($role == 'admin') ? [$id] : [$id, $uid]; 
     $pdo->prepare($sql_del)->execute($params);
     header("Location: index.php?pesan=hapus");
@@ -26,15 +26,15 @@ $base_sql = "SELECT t.*, k.nama_kategori, k.jenis, d.nama_dompet, d.tipe_akun, u
              INNER JOIN dompet d ON t.id_dompet = d.id_dompet # Buat Menghubungkan tabel transaksi dengan dompey menggunakan ID nya
              INNER JOIN users u ON t.id_user = u.id_user"; # Buat menghubungkan tabel transaksi dengan user supaya bisa menampilkan nama anggota keluarga yg buat catatan tsb
 
-if ($role == 'admin') { # Jika user adalah admin, maka ambil semua transaksi tanpa batas
-    $riwayat = $pdo->query("$base_sql ORDER BY t.tanggal DESC, t.id_transaksi DESC")->fetchAll(PDO::FETCH_ASSOC);
-} else { # Jika user adalah user biasa, maka ambil transaksi hanya milik user tersebut
-    $stmt = $pdo->prepare("$base_sql WHERE t.id_user = ? ORDER BY t.tanggal DESC, t.id_transaksi DESC");
+if ($role == 'admin') { 
+    $riwayat = $pdo->query("$base_sql ORDER BY t.tanggal DESC, t.id_transaksi DESC")->fetchAll(PDO::FETCH_ASSOC); # Buat menampilkan riwayat transaksi untuk semua anggota keluarga (admin)
+} else { 
+    $stmt = $pdo->prepare("$base_sql WHERE t.id_user = ? ORDER BY t.tanggal DESC, t.id_transaksi DESC"); # Buat menampilkan riwayat transaksi hanya untuk user biasa
     $stmt->execute([$uid]);
     $riwayat = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$masuk = 0; $keluar = 0; # Inisialisasi variabel untuk menghitung total pemasukan dan pengeluaran
+$masuk = 0; $keluar = 0; 
 foreach ($riwayat as $r) {
     if ($r['jenis'] == 'Pemasukan') $masuk += $r['nominal']; else $keluar += $r['nominal'];
 }
