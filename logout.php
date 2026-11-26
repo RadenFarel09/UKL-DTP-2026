@@ -1,6 +1,6 @@
 <?php
 session_start();
-session_unset(); # Buat menghapus seluruh variabel session yang tersimpan, sehingga user dianggap logout
-session_destroy(); # Buat menghancrkan sesi secara total di server
+session_unset(); 
+session_destroy(); 
 header("Location: login.php?pesan=logout");
 exit;

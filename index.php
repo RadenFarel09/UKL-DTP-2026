@@ -2,14 +2,14 @@
 session_start(); 
 require 'koneksi.php'; 
 
-if (!isset($_SESSION['id_user'])) { # Jika ada yang mencoba mengakses index.php tanpa login, maka langsung redirect ke login.php
+if (!isset($_SESSION['id_user'])) { 
     header("Location: login.php?pesan=belum_login");
     exit;
 }
 
-$uid  = $_SESSION['id_user']; # Buat ambil id_user dari session untuk membatasi akses user biasa hanya pada transaksi miliknya sendiri
-$nama = $_SESSION['nama_lengkap']; # Buat ambil nama_lengkap dari session untuk menampilkan nama user di halaman index.php
-$role = $_SESSION['role']; # Buat ambil role dari session untuk membedakan hak akses antara admin dan user biasa
+$uid  = $_SESSION['id_user']; 
+$nama = $_SESSION['nama_lengkap']; 
+$role = $_SESSION['role'];
 
 if (isset($_GET['hapus'])) { # Buat hapus transaksi (hanya admmin)
     $id = $_GET['hapus']; # Buat ambil id_transaksi dari parameter hapus di URL
@@ -20,11 +20,11 @@ if (isset($_GET['hapus'])) { # Buat hapus transaksi (hanya admmin)
     exit;
 }
 
-$base_sql = "SELECT t.*, k.nama_kategori, k.jenis, d.nama_dompet, d.tipe_akun, u.nama_lengkap # Ambil data transaksi beserta nama kategori, jenis kategori, nama dompet, tipe akun dompet, dan nama lengkap user
+$base_sql = "SELECT t.*, k.nama_kategori, k.jenis, d.nama_dompet, d.tipe_akun, u.nama_lengkap 
              FROM transaksi t
-             INNER JOIN kategori k ON t.id_kategori = k.id_kategori # Ambil data kategori berdasarkan id_kategori dari tabel transaksi
-             INNER JOIN dompet d ON t.id_dompet = d.id_dompet # Ambil data dompet berdasarkan id_dompet dari tabel transaksi
-             INNER JOIN users u ON t.id_user = u.id_user"; # Ambil data user berdasarkan id_user dari tabel transaksi
+             INNER JOIN kategori k ON t.id_kategori = k.id_kategori 
+             INNER JOIN dompet d ON t.id_dompet = d.id_dompet 
+             INNER JOIN users u ON t.id_user = u.id_user"; 
 
 if ($role == 'admin') { # Jika user adalah admin, maka ambil semua transaksi tanpa batas
     $riwayat = $pdo->query("$base_sql ORDER BY t.tanggal DESC, t.id_transaksi DESC")->fetchAll(PDO::FETCH_ASSOC);
